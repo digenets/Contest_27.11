@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <locale.h>
 
 #define SIZE 100
@@ -57,8 +58,16 @@ void str_skip(FILE * inp){
     int arr[1000]= {0};
     fgets(arr, 1000, inp);
 }
+char * converter(int number){
+    char arr[3] = {0};
+    int units = 0;
+    int dozens = 0;
+    int hundreds = 0;
+    units = number % 100;
+    dozens = number % 10;
+}
 
-char* enter_ip(FILE* inp, IP str){
+char* enter_ip(FILE* inp, IP net, IP mask){
     char cur         =  0;
     char temp_arr[4] = {0};
     char res_arr[15] = {0};
@@ -73,10 +82,137 @@ char* enter_ip(FILE* inp, IP str){
         else
             break;
     }
-
-    for (int j = 0; j < strlen(temp_arr); j++){
-        str.octade1 =
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        net.octade1 = temp_arr[k] * pow(10, lenght - i-1);
     }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        net.octade2 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        net.octade3 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        net.octade4 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    fgetc(inp);
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; i++){
+        mask.octade1 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        mask.octade2 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        mask.octade3 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
+    }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    lenght = strlen(temp_arr);
+    for (int k = 0; k < lenght; k++){
+        mask.octade4 = temp_arr[k] * pow(10, lenght - k-1);
+    }
+    net.octade1 = net.octade1 & mask.octade1;
+    net.octade2 = net.octade2 & mask.octade2;
+    net.octade3 = net.octade3 & mask.octade3;
+    net.octade4 = net.octade4 & mask.octade4;
+
 }
 
 
@@ -97,7 +233,6 @@ int main()
     number_of_lines_2 = count_lines(inp);
     IP adress;
     IP mask;
-    char
 
 
 

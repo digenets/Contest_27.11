@@ -18,6 +18,34 @@ typedef struct{
         octade4;
 }IP;
 
+void reverse(char s[])
+{
+    int i, j;
+    char c;
+
+    for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+
+void itoa(int n, char s[])
+{
+    int i, sign;
+
+    if ((sign = n) < 0)  /* записываем знак */
+        n = -n;          /* делаем n положительным числом */
+    i = 0;
+    do {       /* генерируем цифры в обратном порядке */
+        s[i++] = n % 10 + '0';   /* берем следующую цифру */
+    } while ((n /= 10) > 0);     /* удаляем */
+    if (sign < 0)
+        s[i++] = '-';
+    s[i] = '\0';
+    reverse(s);
+}
+
 int pow(int x, int y) {
     int temp = x;
     if (y == 0)
@@ -82,10 +110,7 @@ char* enter_ip(FILE* inp, IP net, IP mask){
         else
             break;
     }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        net.octade1 = temp_arr[k] * pow(10, lenght - i-1);
-    }
+    net.octade1 = atoi(temp_arr[0]);
     for (int k = 0; k < 4; k++)
     {
         temp_arr[k] = 0;
@@ -100,10 +125,7 @@ char* enter_ip(FILE* inp, IP net, IP mask){
         else
             break;
     }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        net.octade2 = temp_arr[k] * pow(10, lenght - k-1);
-    }
+    net.octade2 = atoi(temp_arr[0]);
     for (int k = 0; k < 4; k++)
     {
         temp_arr[k] = 0;
@@ -118,10 +140,7 @@ char* enter_ip(FILE* inp, IP net, IP mask){
         else
             break;
     }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        net.octade3 = temp_arr[k] * pow(10, lenght - k-1);
-    }
+    net.octade3 = atoi(temp_arr[0]);
     for (int k = 0; k < 4; k++)
     {
         temp_arr[k] = 0;
@@ -136,11 +155,9 @@ char* enter_ip(FILE* inp, IP net, IP mask){
         else
             break;
     }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        net.octade4 = temp_arr[k] * pow(10, lenght - k-1);
-    }
+    net.octade4 = atoi(temp_arr[0]);
     fgetc(inp);
+    i=0;
     while (1){
         cur = fgetc(inp);
         if ('.' != cur)
@@ -150,10 +167,7 @@ char* enter_ip(FILE* inp, IP net, IP mask){
         else
             break;
     }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; i++){
-        mask.octade1 = temp_arr[k] * pow(10, lenght - k-1);
-    }
+    mask.octade1 = atoi(temp_arr[0]);
     for (int k = 0; k < 4; k++)
     {
         temp_arr[k] = 0;
@@ -169,9 +183,22 @@ char* enter_ip(FILE* inp, IP net, IP mask){
             break;
     }
     lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        mask.octade2 = temp_arr[k] * pow(10, lenght - k-1);
+    mask.octade2 = atoi(temp_arr[0]);
+    for (int k = 0; k < 4; k++)
+    {
+        temp_arr[k] = 0;
     }
+    i = 0;
+    while (1){
+        cur = fgetc(inp);
+        if ('.' != cur)
+        {
+            temp_arr[i] = cur;
+        }
+        else
+            break;
+    }
+    mask.octade3 = atoi(temp_arr[0]);
     for (int k = 0; k < 4; k++)
     {
         temp_arr[k] = 0;
@@ -187,31 +214,27 @@ char* enter_ip(FILE* inp, IP net, IP mask){
             break;
     }
     lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        mask.octade3 = temp_arr[k] * pow(10, lenght - k-1);
-    }
-    for (int k = 0; k < 4; k++)
-    {
-        temp_arr[k] = 0;
-    }
-    i = 0;
-    while (1){
-        cur = fgetc(inp);
-        if ('.' != cur)
-        {
-            temp_arr[i] = cur;
-        }
-        else
-            break;
-    }
-    lenght = strlen(temp_arr);
-    for (int k = 0; k < lenght; k++){
-        mask.octade4 = temp_arr[k] * pow(10, lenght - k-1);
-    }
+    mask.octade4 = atoi(temp_arr[0]);
     net.octade1 = net.octade1 & mask.octade1;
     net.octade2 = net.octade2 & mask.octade2;
     net.octade3 = net.octade3 & mask.octade3;
     net.octade4 = net.octade4 & mask.octade4;
+    char arr1[3] = {0};
+    char arr2[3] = {0};
+    char arr3[3] = {0};
+    char arr4[3] = {0};
+    itoa(net.octade1, arr1);
+    itoa(net.octade2, arr2);
+    itoa(net.octade3, arr3);
+    itoa(net.octade4, arr4);
+    strcat(res_arr, arr1);
+    strcat(res_arr, ".");
+    strcat(res_arr, arr2);
+    strcat(res_arr, ".");
+    strcat(res_arr, arr3);
+    strcat(res_arr, ".");
+    strcat(res_arr, arr4);
+    return res_arr[0];
 
 }
 
@@ -224,9 +247,10 @@ int main()
 
     int number_of_lines_1 = count_lines(inp);
     int number_of_lines_2 = 0;
+    char* result_of_conjunction = NULL;
 
     str_skip(inp);
-    for (int i = 0; i < number_of_lines_1; ++i){
+    for (int i = 0; i < number_of_lines_1+2; ++i){
         str_skip(inp);
     }
 
@@ -234,6 +258,7 @@ int main()
     IP adress;
     IP mask;
 
+    result_of_conjunction = enter_ip(inp, adress, mask);
 
 
 
